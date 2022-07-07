@@ -1155,7 +1155,7 @@ presubmits:
         - "--build-tests"
         resources:
           requests:
-            cpu: 2000m
+            cpu: 4000m
             memory: 4Gi
           limits:
             cpu: 4000m
@@ -1221,7 +1221,7 @@ presubmits:
         - "--integration-tests"
         resources:
           requests:
-            cpu: 2000m
+            cpu: 4000m
             memory: 4Gi
           limits:
             cpu: 4000m
@@ -1254,7 +1254,7 @@ presubmits:
         - "--integration-tests"
         resources:
           requests:
-            cpu: 2000m
+            cpu: 4000m
             memory: 4Gi
           limits:
             cpu: 4000m
@@ -1305,7 +1305,7 @@ presubmits:
     decorate: true
     optional: true
     rerun_command: "/test pull-tekton-pipeline-kind-integration-tests"
-    trigger: "(?m)^/test (all|pull-tekton-pipeline-kind-integration-tests|optional-kind),?(\\s+|$)"
+    trigger: "(?m)^/test (pull-tekton-pipeline-kind-integration-tests|optional-kind),?(\\s+|$)"
     spec:
       containers:
         - image: gcr.io/tekton-releases/dogfooding/test-runner:latest # TODO(abayer): Probably should change this to a specific tag once the job is stable.
@@ -1322,7 +1322,7 @@ presubmits:
             - "--cluster-suffix"
             - "$(PULL_NUMBER)"
             - "--nodes"
-            - "2"
+            - "3"
             - "--e2e-script"
             - "./test/e2e-tests.sh"
             - --e2e-env
@@ -1331,7 +1331,7 @@ presubmits:
             privileged: true
           resources:
             requests:
-              cpu: 2000m
+              cpu: 4000m
               memory: 4Gi
             limits:
               cpu: 4000m
@@ -1346,7 +1346,7 @@ presubmits:
     decorate: true
     optional: true
     rerun_command: "/test pull-tekton-pipeline-kind-alpha-integration-tests"
-    trigger: "(?m)^/test (all|pull-tekton-pipeline-kind-alpha-integration-tests|optional-kind),?(\\s+|$)"
+    trigger: "(?m)^/test (pull-tekton-pipeline-kind-alpha-integration-tests|optional-kind),?(\\s+|$)"
     spec:
       containers:
         - image: gcr.io/tekton-releases/dogfooding/test-runner:latest # TODO(abayer): Probably should change this to a specific tag once the job is stable.
@@ -1363,7 +1363,7 @@ presubmits:
             - "--cluster-suffix"
             - "$(PULL_NUMBER)"
             - "--nodes"
-            - "2"
+            - "3"
             - "--e2e-script"
             - "./test/e2e-tests.sh"
             - --e2e-env
@@ -1372,7 +1372,7 @@ presubmits:
             privileged: true
           resources:
             requests:
-              cpu: 2000m
+              cpu: 4000m
               memory: 4Gi
             limits:
               cpu: 4000m
@@ -1387,7 +1387,7 @@ presubmits:
     decorate: true
     optional: true
     rerun_command: "/test pull-tekton-pipeline-kind-yaml-tests"
-    trigger: "(?m)^/test (all|pull-tekton-pipeline-kind-yaml-tests|optional-kind),?(\\s+|$)"
+    trigger: "(?m)^/test (pull-tekton-pipeline-kind-yaml-tests|optional-kind),?(\\s+|$)"
     spec:
       containers:
         - image: gcr.io/tekton-releases/dogfooding/test-runner:latest # TODO(abayer): Probably should change this to a specific tag once the job is stable.
@@ -1404,7 +1404,7 @@ presubmits:
             - "--cluster-suffix"
             - "$(PULL_NUMBER)"
             - "--nodes"
-            - "2"
+            - "3"
             - "--e2e-script"
             - "./test/e2e-tests.sh"
             - --e2e-env
@@ -1413,7 +1413,7 @@ presubmits:
             privileged: true
           resources:
             requests:
-              cpu: 2000m
+              cpu: 4000m
               memory: 4Gi
             limits:
               cpu: 4000m
@@ -1428,7 +1428,7 @@ presubmits:
     decorate: true
     optional: true
     rerun_command: "/test pull-tekton-pipeline-kind-alpha-yaml-tests"
-    trigger: "(?m)^/test (all|pull-tekton-pipeline-kind-alpha-yaml-tests|optional-kind),?(\\s+|$)"
+    trigger: "(?m)^/test (pull-tekton-pipeline-kind-alpha-yaml-tests|optional-kind),?(\\s+|$)"
     spec:
       containers:
         - image: gcr.io/tekton-releases/dogfooding/test-runner:latest # TODO(abayer): Probably should change this to a specific tag once the job is stable.
@@ -1445,7 +1445,7 @@ presubmits:
             - "--cluster-suffix"
             - "$(PULL_NUMBER)"
             - "--nodes"
-            - "2"
+            - "3"
             - "--e2e-script"
             - "./test/e2e-tests.sh"
             - --e2e-env
@@ -1454,7 +1454,7 @@ presubmits:
             privileged: true
           resources:
             requests:
-              cpu: 2000m
+              cpu: 4000m
               memory: 4Gi
             limits:
               cpu: 4000m
