@@ -4,7 +4,7 @@
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        generateName: pipeline-in-pod-release-nightly-
+        generateName: concurrency-release-nightly-
         labels:
           tekton.dev/kind: release
       spec:
@@ -15,8 +15,6 @@
           value: $(tt.params.gitrepository)
         - name: gitRevision
           value: $(tt.params.gitrevision)
-        - name: images
-          value: controller
         - name: imageRegistry
           value: $(tt.params.imageRegistry)
         - name: imageRegistryPath
@@ -26,9 +24,9 @@
         - name: serviceAccountPath
           value: release.json
         - name: subfolder
-          value: pipeline-in-pod
+          value: concurrency
         - name: releaseBucket
-          value: gs://tekton-releases-nightly/pipeline-in-pod
+          value: gs://tekton-releases-nightly/concurrency
         workspaces:
           - name: workarea
             volumeClaimTemplate:
