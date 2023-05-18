@@ -1287,7 +1287,7 @@ presubmits:
           value: "true"
           effect: NoSchedule
       containers:
-        - image: gcr.io/tekton-releases/dogfooding/test-runner:latest # TODO(abayer): Use specific version when https://github.com/tektoncd/plumbing/pull/1167 has merged
+        - image: gcr.io/tekton-releases/dogfooding/test-runner@sha256:5e5c4b04b7e7459f306eb0b8424495652b034b4b06a9e9ea7b0fe22282fd11af # golang 1.19
           imagePullPolicy: Always
           command:
             - /usr/local/bin/entrypoint.sh
@@ -1333,7 +1333,7 @@ presubmits:
           value: "true"
           effect: NoSchedule
       containers:
-        - image: gcr.io/tekton-releases/dogfooding/test-runner:latest # TODO(abayer): Use specific version when https://github.com/tektoncd/plumbing/pull/1167 has merged
+        - image: gcr.io/tekton-releases/dogfooding/test-runner@sha256:5e5c4b04b7e7459f306eb0b8424495652b034b4b06a9e9ea7b0fe22282fd11af # golang 1.19
           imagePullPolicy: Always
           command:
             - /usr/local/bin/entrypoint.sh
@@ -1391,7 +1391,7 @@ presubmits:
           value: "true"
           effect: NoSchedule
       containers:
-        - image: gcr.io/tekton-releases/dogfooding/test-runner:latest # TODO(abayer): Use specific version when https://github.com/tektoncd/plumbing/pull/1167 has merged
+        - image: gcr.io/tekton-releases/dogfooding/test-runner@sha256:5e5c4b04b7e7459f306eb0b8424495652b034b4b06a9e9ea7b0fe22282fd11af # golang 1.19
           imagePullPolicy: Always
           command:
             - /usr/local/bin/entrypoint.sh
