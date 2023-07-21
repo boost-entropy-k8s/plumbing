@@ -1,0 +1,5 @@
+bases:
+- ../../base
+patchesStrategicMerge:
+- chains-config.yaml
+- serviceaccount.yaml
