@@ -1036,7 +1036,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-tekton-operator-build-tests),?(\\s+|$)"
     spec:
       containers:
-      - image: gcr.io/tekton-releases/dogfooding/test-runner@sha256:5e5c4b04b7e7459f306eb0b8424495652b034b4b06a9e9ea7b0fe22282fd11af # golang 1.19
+      - image: gcr.io/tekton-releases/dogfooding/test-runner@sha256:11dc05cf6e81786ce5935e43aad29a84d6b662804cb57f740c9fb3e1e73ff5f7 # golang 1.19
         imagePullPolicy: Always
         command:
         - /usr/local/bin/entrypoint.sh
@@ -1069,7 +1069,7 @@ presubmits:
     trigger: "(?m)^/test (all|pull-tekton-operator-unit-tests),?(\\s+|$)"
     spec:
       containers:
-      - image: gcr.io/tekton-releases/dogfooding/test-runner@sha256:5e5c4b04b7e7459f306eb0b8424495652b034b4b06a9e9ea7b0fe22282fd11af # golang 1.19
+      - image: gcr.io/tekton-releases/dogfooding/test-runner@sha256:11dc05cf6e81786ce5935e43aad29a84d6b662804cb57f740c9fb3e1e73ff5f7 # golang 1.19
         imagePullPolicy: Always
         command:
         - /usr/local/bin/entrypoint.sh
@@ -1112,7 +1112,7 @@ presubmits:
           value: "true"
           effect: NoSchedule
       containers:
-      - image: gcr.io/tekton-releases/dogfooding/test-runner@sha256:5e5c4b04b7e7459f306eb0b8424495652b034b4b06a9e9ea7b0fe22282fd11af # golang 1.19
+      - image: gcr.io/tekton-releases/dogfooding/test-runner@sha256:11dc05cf6e81786ce5935e43aad29a84d6b662804cb57f740c9fb3e1e73ff5f7 # golang 1.19
         imagePullPolicy: Always
         command:
         - /usr/local/bin/entrypoint.sh
@@ -1122,7 +1122,7 @@ presubmits:
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
         - "/usr/local/bin/kind-e2e"
         - "--k8s-version"
-        - "v1.24.x"
+        - "v1.25.x"
         - "--nodes"
         - "3"
         - "--e2e-script"
@@ -1473,29 +1473,57 @@ presubmits:
   - name: pull-tekton-catalog-integration-tests
     labels:
       preset-presubmit-sh: "true"
+      preset-dind-enable: "true"
+      preset-kind-volume-mounts: "true"
     agent: kubernetes
     always_run: true
     decorate: true
     rerun_command: "/test pull-tekton-catalog-integration-tests"
     trigger: "(?m)^/test (all|pull-tekton-catalog-integration-tests),?(\\s+|$)"
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: operator-kind-e2e
+                    operator: Exists
+              topologyKey: kubernetes.io/hostname
+      nodeSelector:
+        cloud.google.com/gke-ephemeral-storage-local-ssd: "true"
+        cloud.google.com/gke-nodepool: n2-standard-4-kind
+      tolerations:
+        - key: kind-only
+          operator: Equal
+          value: "true"
+          effect: NoSchedule
       containers:
-      - image: gcr.io/tekton-releases/dogfooding/test-runner:v20220316-golang-v1-16
+      - image: gcr.io/tekton-releases/dogfooding/test-runner:11dc05cf6e81786ce5935e43aad29a84d6b662804cb57f740c9fb3e1e73ff5f7
         imagePullPolicy: Always
+        securityContext:
+          privileged: true
+        resources:
+          requests:
+            cpu: 3500m
+            memory: 4Gi
+          limits:
+            cpu: 3500m
+            memory: 8Gi
         command:
         - /usr/local/bin/entrypoint.sh
         args:
-        - "--scenario=kubernetes_execute_bazel"
-        - "--clean"
-        - "--job=$(JOB_NAME)"
-        - "--repo=github.com/$(REPO_OWNER)/$(REPO_NAME)=$(PULL_REFS)"
-        - "--root=/go/src"
         - "--service-account=/etc/test-account/service-account.json"
-        - "--upload=gs://tekton-prow/pr-logs"
         - "--" # end bootstrap args, scenario args below
         - "--" # end kubernetes_execute_bazel flags (consider following flags as text)
-        - "./test/presubmit-tests.sh"
-        - "--integration-tests"
+        - "/usr/local/bin/kind-e2e"
+        - "--k8s-version"
+        - "v1.25.x"
+        - "--nodes"
+        - "3"
+        - "--e2e-script"
+        - "./test/e2e-tests-prow.sh"
+        - "--e2e-env"
+        - "./test/e2e-tests-kind-prow.env"
   tektoncd/resolution:
   - name: pull-tekton-resolution-build-tests
     labels:
@@ -1680,6 +1708,30 @@ presubmits:
             limits:
               cpu: 3500m
               memory: 8Gi
+  - name: pull-tekton-results-go-coverage
+    labels:
+      preset-github-token: "true"
+    agent: kubernetes
+    always_run: true
+    rerun_command: "/test pull-tekton-results-go-coverage"
+    trigger: "(?m)^/test (all|pull-tekton-results-go-coverage),?(\\s+|$)"
+    optional: true
+    decorate: true
+    clone_uri: "https://github.com/tektoncd/results.git"
+    spec:
+      containers:
+      - image: gcr.io/tekton-releases/dogfooding/coverage:latest
+        imagePullPolicy: Always
+        command:
+        - "/coverage"
+        args:
+        - "--postsubmit-gcs-bucket=tekton-prow"
+        - "--postsubmit-job-name=post-tekton-results-go-coverage"
+        - "--artifacts=$(ARTIFACTS)"
+        - "--profile-name=coverage_profile.txt"
+        - "--cov-target=."
+        - "--cov-threshold-percentage=0"
+        - "--github-token=/etc/github-token/oauth"
   tektoncd/triggers:
   - name: pull-tekton-triggers-build-tests
     labels:
@@ -1921,7 +1973,21 @@ postsubmits:
         args:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
-
+  tektoncd/results:
+  - name: post-tekton-results-go-coverage
+    branches:
+    - main
+    agent: kubernetes
+    decorate: true
+    spec:
+      containers:
+      - image: gcr.io/tekton-releases/dogfooding/coverage:latest
+        imagePullPolicy: Always
+        command:
+        - "/coverage"
+        args:
+        - "--artifacts=$(ARTIFACTS)"
+        - "--cov-threshold-percentage=0"
 periodics:
 - cron: "5 2 * * *"
   name: ci-tekton-pipeline-upgrade-tests
