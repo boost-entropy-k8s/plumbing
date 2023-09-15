@@ -1473,7 +1473,7 @@ presubmits:
   - name: pull-tekton-catalog-integration-tests
     labels:
       preset-presubmit-sh: "true"
-      preset-dind-enable: "true"
+      preset-dind-enabled: "true"
       preset-kind-volume-mounts: "true"
     agent: kubernetes
     always_run: true
@@ -1481,14 +1481,6 @@ presubmits:
     rerun_command: "/test pull-tekton-catalog-integration-tests"
     trigger: "(?m)^/test (all|pull-tekton-catalog-integration-tests),?(\\s+|$)"
     spec:
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: operator-kind-e2e
-                    operator: Exists
-              topologyKey: kubernetes.io/hostname
       nodeSelector:
         cloud.google.com/gke-ephemeral-storage-local-ssd: "true"
         cloud.google.com/gke-nodepool: n2-standard-4-kind
@@ -1498,7 +1490,7 @@ presubmits:
           value: "true"
           effect: NoSchedule
       containers:
-      - image: gcr.io/tekton-releases/dogfooding/test-runner:11dc05cf6e81786ce5935e43aad29a84d6b662804cb57f740c9fb3e1e73ff5f7
+      - image: gcr.io/tekton-releases/dogfooding/test-runner@sha256:11dc05cf6e81786ce5935e43aad29a84d6b662804cb57f740c9fb3e1e73ff5f7
         imagePullPolicy: Always
         securityContext:
           privileged: true
@@ -1521,7 +1513,7 @@ presubmits:
         - "--nodes"
         - "3"
         - "--e2e-script"
-        - "./test/e2e-tests-prow.sh"
+        - "./test/e2e-tests.sh"
         - "--e2e-env"
         - "./test/e2e-tests-kind-prow.env"
   tektoncd/resolution:
