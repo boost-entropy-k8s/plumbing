@@ -58,8 +58,6 @@ RUN apt update && apt install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3 1 \
     && update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
-    # \
-    # && python -m pip install --upgrade pip setuptools wheel
 
 # Install gcloud
 
@@ -160,7 +158,7 @@ RUN apt update && apt install -y uuid-runtime  # for uuidgen
 RUN apt update && apt install -y rubygems  # for mdl
 
 # Install ko
-ARG KO_VERSION=0.14.1
+ARG KO_VERSION=0.15.2
 RUN curl -L https://github.com/google/ko/releases/download/v${KO_VERSION}/ko_${KO_VERSION}_Linux_x86_64.tar.gz > ko_${KO_VERSION}.tar.gz
 RUN tar -C /usr/local/bin -xzf ko_${KO_VERSION}.tar.gz
 
@@ -173,11 +171,11 @@ RUN GO111MODULE="on" go install github.com/google/go-licenses@latest && \
     GO111MODULE="on" go install sigs.k8s.io/kind@${KIND_VERSION}
 
 # Install GolangCI linter: https://github.com/golangci/golangci-lint/
-ARG GOLANGCI_VERSION=1.52.2
+ARG GOLANGCI_VERSION=1.56.2
 RUN curl -sL https://github.com/golangci/golangci-lint/releases/download/v${GOLANGCI_VERSION}/golangci-lint-${GOLANGCI_VERSION}-linux-amd64.tar.gz | tar -C /usr/local/bin -xvzf - --strip-components=1 --wildcards "*/golangci-lint"
 
 # Install Kustomize:
-ARG KUSTOMIZE_VERSION=4.5.7
+ARG KUSTOMIZE_VERSION=5.3.0
 RUN curl -sL https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz | tar -C /usr/local/bin -xvzf - --strip-components=1 --wildcards "kustomize"
 
 # Install the TektonCD CLI: https://github.com/tektoncd/cli/
@@ -189,7 +187,7 @@ RUN gem install mixlib-config -v 2.2.4  # required because ruby is 2.1
 RUN gem install mdl -v 0.5.0
 
 # Install yq
-ARG YQ_VERSION=4.13.4
+ARG YQ_VERSION=4.42.1
 RUN wget https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64 -O /usr/local/bin/yq && \
     chmod +x /usr/local/bin/yq
 
