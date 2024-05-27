@@ -18,7 +18,7 @@ FROM golang:1.22-alpine@sha256:f1fe698725f6ed14eb944dc587591f134632ed47fc0732ec2
 
 WORKDIR /kind
 
-ARG KO_VERSION=0.15.1
+ARG KO_VERSION=0.15.4
 
 RUN apk add --no-cache \
   bash curl docker git jq openssl
@@ -30,4 +30,4 @@ RUN tar -C /usr/local/bin -xzf ko_${KO_VERSION}.tar.gz
 # Install kubectl and make sure it's available in the PATH.
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl && chmod +x ./kubectl && mv ./kubectl /bin
 
-RUN curl -Lo ./kind "https://kind.sigs.k8s.io/dl/v0.10.0/kind-$(uname)-amd64" && chmod +x ./kind && mv ./kind /bin
+RUN curl -Lo ./kind "https://kind.sigs.k8s.io/dl/v0.23.0/kind-$(uname)-amd64" && chmod +x ./kind && mv ./kind /bin
