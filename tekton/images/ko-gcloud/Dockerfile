@@ -11,7 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 ARG GO_VERSION=1.22.1
+FROM ghcr.io/ko-build/ko:v0.15.4@sha256:ad4cf979054995a7c61d3ded9125ae9c2c37022d08c543eede5c805ee3ce3475 AS ko
 FROM golang:1.22-alpine@sha256:ace6cc3fe58d0c7b12303c57afe6d6724851152df55e08057b43990b927ad5e8 AS build
 LABEL description="Build container"
 
@@ -29,7 +31,7 @@ RUN go install sigs.k8s.io/kustomize/kustomize/v4@v4.5.7
 # Install yq for YAML parsing
 RUN apk add --no-cache yq
 
-FROM google/cloud-sdk:481.0.0-alpine@sha256:3f58ce696e80f680c21db21032aaca4b2fa0a10f3b26bc769ad5aecc182259f2
+FROM google/cloud-sdk:482.0.0-alpine@sha256:25bcdb8116f3032a391ad2ae690ac46ea5740cb471266a0e47ab85129be47041
 ARG GO_VERSION
 LABEL maintainer "Tekton Authors <tekton-dev@googlegroups.com>"
 
@@ -39,12 +41,8 @@ RUN tar -C /usr/local -xzf go${GO_VERSION}.tar.gz
 ENV PATH="${PATH}:/usr/local/go/bin"
 ENV GOROOT /usr/local/go
 
-# Install ko
-ARG KO_VERSION=0.15.4
-RUN curl -L https://github.com/google/ko/releases/download/v${KO_VERSION}/ko_${KO_VERSION}_Linux_x86_64.tar.gz > ko_${KO_VERSION}.tar.gz
-RUN tar -C /usr/local/bin -xzf ko_${KO_VERSION}.tar.gz
-
 # Get static binaries from the build image
+COPY --from=ko /ko-app/ko /usr/local/bin/ko
 COPY --from=build /usr/local/bin/kubectl /usr/local/bin/kubectl
 COPY --from=build /usr/local/go/bin/kustomize /usr/local/go/bin
 COPY --from=build /usr/bin/yq /usr/local/bin/yq
