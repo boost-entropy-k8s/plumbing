@@ -23,7 +23,7 @@ RUN cd /go/src/k8s.io/test-infra && \
     git checkout e685556b32c5fb7ab12c3277d41112d47ceac0cd && \
     go install k8s.io/test-infra/kubetest
 
-FROM docker.io/library/ubuntu:24.04@sha256:2e863c44b718727c860746568e1d54afd13b2fa71b160f5cd9058fc436217b30
+FROM docker.io/library/ubuntu:24.04@sha256:8a37d68f4f73ebf3d4efafbcf66379bf3728902a8038616808f04e34a9ab63ee
 ARG GO_VERSION
 LABEL maintainer "Tekton Authors <tekton-dev@googlegroups.com>"
 
@@ -178,7 +178,7 @@ ARG KUSTOMIZE_VERSION=5.3.0
 RUN curl -sL https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz | tar -C /usr/local/bin -xvzf - --strip-components=1 --wildcards "kustomize"
 
 # Install the TektonCD CLI: https://github.com/tektoncd/cli/
-ARG TKN_VERSION=0.37.0
+ARG TKN_VERSION=0.38.0
 RUN curl -sL https://github.com/tektoncd/cli/releases/download/v${TKN_VERSION}/tkn_${TKN_VERSION}_Linux_x86_64.tar.gz | tar -C /usr/local/bin -xvzf - --wildcards "tkn"
 
 # Extra tools through gem
