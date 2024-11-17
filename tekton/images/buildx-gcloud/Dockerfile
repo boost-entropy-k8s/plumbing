@@ -11,8 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM gcr.io/google.com/cloudsdktool/cloud-sdk:alpine@sha256:1a165df95679dad757f1828601616d39a9d2c58582dc917984f4c1956a9e9655
+FROM gcr.io/google.com/cloudsdktool/cloud-sdk:alpine@sha256:83bb9c749ceeedc799057a13e27fcce6b22dffc0b3ad9a7617c3fd8687de630b
 LABEL maintainer "Tekton Authors <tekton-dev@googlegroups.com>"
+LABEL org.opencontainers.image.source=https://github.com/tektoncd/plumbing
+LABEL org.opencontainers.image.description="Image for Buildx"
+LABEL org.opencontainers.image.licenses=Apache-2.0
 
 RUN  mkdir -p ~/.docker/cli-plugins \
      && curl -fsSL https://github.com/docker/buildx/releases/download/v0.8.1/buildx-v0.8.1.linux-amd64 > ~/.docker/cli-plugins/docker-buildx \
